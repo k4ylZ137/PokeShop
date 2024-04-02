@@ -75,7 +75,7 @@ Main Menu
 	MAIN MENU
 	------------------------------------------------------------------
  
-	Would you like to Search or Shop (Search/Shop)?
+	Would you like to Search, Shop or access Inventory (Search/Shop/Inventory)?
  
 	------------------------------------------------------------------
 	{User Input}

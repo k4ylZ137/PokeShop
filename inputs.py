@@ -34,12 +34,12 @@ def handle_inputs(input_dict):
 	# Update the subbed in dict to include static commands
 	input_dict.update({
 		'quit': ('Quit the program', quit_func),
-		'help': ('Display the list of commands and there descriptions', help_func),
+		'help': ('Display the list of commands and their descriptions', help_func),
 	})
 
 	# Loop for commands is help or quit
 	while True:
-		user_input = input("Enter command: ")
+		user_input = input("Enter command: ").lower
 		if user_input == 'help':
 			description, func = input_dict[user_input]
 			func(input_dict)

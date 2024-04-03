@@ -14,7 +14,7 @@ class DatabaseManager:
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
                 password TEXT NOT NULL,
-				poke_bits NUMBER DEFAULT 1500 NOT NULL
+                poke_bits NUMBER DEFAULT 1500 NOT NULL
             )
         ''')
 
@@ -38,18 +38,18 @@ class DatabaseManager:
         self.conn.commit()
 
     def insert_user(self, username, password):
-    	self.cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
-    	self.conn.commit()
+        self.cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+        self.conn.commit()
 
     def close_connection(self):
         self.conn.close()
 
     def get_users(self):
-    	self.cursor.execute("SELECT * FROM users")
-    	users = self.cursor.fetchall()
-    	return users
+        self.cursor.execute("SELECT * FROM users")
+        users = self.cursor.fetchall()
+        return users
 
     def get_pokemon(self, user_id):
-    	self.cursor.execute("SELECT * FROM pokemon WHERE user_id = ?", (user_id,))
-    	pokemon = self.cursor.fetchall()
-    	return pokemon
+        self.cursor.execute("SELECT * FROM pokemon WHERE user_id = ?", (user_id,))
+        pokemon = self.cursor.fetchall()
+        return pokemon

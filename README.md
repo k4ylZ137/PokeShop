@@ -124,3 +124,18 @@ Shop
 
 Kanban Board:- https://uofg-thegamblers.atlassian.net/jira/software/projects/POK/boards/2
 Pokemon API:- https://pokeapi.co/
+
+
+====Class Specification====
+
+more to come...
+
+====Branching Strategy====
+
+When implementing code, create an issue and then branch into your workspace. 
+Type the following into the command-line. 
+- git pull
+- git checkout {name_of_issue}
+
+When merging code, commit and push, and then assign a code reviewer - when review complete, merge code. 
+

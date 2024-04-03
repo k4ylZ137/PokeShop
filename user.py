@@ -5,6 +5,7 @@ class user:
 
     def __init__(self, username, password, inventory=[]):
         self.username = username
+        self.password = self.hash_password(password)
         self.inventory = inventory
         self.pokebits = 1500
 
@@ -30,3 +31,11 @@ class user:
 
     def get_current_user(self):
          return self.current_user
+
+    def hash_password(self, password):
+        # Hash the password using bcrypt
+        return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+
+    def compare_password(self, password):
+        # Compare the password
+        return bcrypt.checkpw(password.encode('utf-8'), self.password)

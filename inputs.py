@@ -6,7 +6,7 @@ import inquirer
 # https://github.com/magmax/python-inquirer
 
 def quit_func():
-    print('\n---------------------------------------------')
+    print('\n------------------------------------------------------------------------------------------------')
 	# define a checkbox question, curtosy of Erin
     questions = [
         inquirer.List('confirmQuit',
@@ -23,14 +23,14 @@ def quit_func():
         return
 
 def help_func(input_dict):
-	print('\n---------------------------------------------')
+	print('\n------------------------------------------------------------------------------------------------')
 	print("Available inputs:")
 	# Print the attributes in the dictionary
 	for command, (description, _) in input_dict.items():
 		print(f"- {command}: {description}")
-	print('---------------------------------------------\n')
+	print('------------------------------------------------------------------------------------------------')
 
-def handle_inputs(input_dict):
+def handle_inputs(input_dict: dict):
 	# Update the subbed in dict to include static commands
 	input_dict.update({
 		'quit': ('Quit the program', quit_func),
@@ -39,7 +39,8 @@ def handle_inputs(input_dict):
 
 	# Loop for commands is help or quit
 	while True:
-		user_input = input("Enter command: ").lower
+		user_input = input("\nEnter command: ").lower()
+		print(user_input)
 		if user_input == 'help':
 			description, func = input_dict[user_input]
 			func(input_dict)

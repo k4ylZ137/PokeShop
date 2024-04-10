@@ -10,8 +10,6 @@ def get_poke_data():
         return (pokemen)
     else:
         print(f'Error: {response.status_code}')
-    # pokemen = json.loads(str(response))
-    # print(pokemen)
 
 pokemen = get_poke_data()
 

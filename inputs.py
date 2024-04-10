@@ -6,13 +6,11 @@ from rich import print
 from rich.console import Console
 from rich.rule import Rule
 
-
-
 # The idea of this is to use a dictionary subbed into a function to allow us to easily handle input here rather than repeating code 😉
 # https://github.com/magmax/python-inquirer
 
 def quit_func():
-	print(Rule(style='blue'))
+	print(Rule(style='white'))
 	# define a checkbox question, curtosy of Erin
 	questions = [
         inquirer.List('confirmQuit',

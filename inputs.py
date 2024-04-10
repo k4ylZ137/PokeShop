@@ -1,26 +1,30 @@
 import sys
 import re
 import inquirer
+import rich
+from rich import print
+from rich.console import Console
+from rich.rule import Rule
 
 # The idea of this is to use a dictionary subbed into a function to allow us to easily handle input here rather than repeating code 😉
 # https://github.com/magmax/python-inquirer
 
 def quit_func():
-    print('\n------------------------------------------------------------------------------------------------')
+	print(Rule(style='white'))
 	# define a checkbox question, curtosy of Erin
-    questions = [
+	questions = [
         inquirer.List('confirmQuit',
             message="Are you sure you want to quit",
             choices=['Yes', 'No'],
         ),
     ]
-    answers = inquirer.prompt(questions)
+	answers = inquirer.prompt(questions)
 	# If selected answer is yes exit program
-    if answers['confirmQuit'] == 'Yes':
-        sys.exit()
+	if answers['confirmQuit'] == 'Yes':
+	    sys.exit()
 	# Else return to loop
-    else:
-        return
+	else:
+	    return
 
 def help_func(input_dict):
 	print('\n------------------------------------------------------------------------------------------------')

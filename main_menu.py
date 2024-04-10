@@ -1,9 +1,12 @@
 import inputs
+import rich
+from rich.panel import Panel
 
 # Print formatting for the main menu
-print('\nMAIN MENU\n------------------------------------------------------------------------------------------------')
-print('\nWould you like to Search, Shop or look at your Inventory? (search/shop/inventory)')
-print('\n------------------------------------------------------------------------------------------------')
+print()
+title = 'Welcome to the Pokemon Market!'
+text = '   Would you like to Search, Shop or look at your Inventory? (search/shop/inventory)'
+rich.print(Panel(text, title=title, padding=(1,1)))
 
 # Placeholder functions
 def search_func():

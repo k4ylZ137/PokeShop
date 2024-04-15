@@ -1,3 +1,7 @@
+====Initialise platform=====
+To install dependencies just run
+pip install -r requirements.txt
+
 ====Abstract=====
 Showcasing Pokemon from across all regions and generations, PokeShop allows users to buy, sell and discover
 Pokemon, leveling-up their poke-experience. 

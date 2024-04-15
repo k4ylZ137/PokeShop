@@ -55,8 +55,7 @@ def handle_inputs(input_dict: dict):
             func(input_dict)
         elif user_input in input_dict:
             description, func = input_dict[user_input]
-            func()
-            break
+            return func()
         else:
             print("Whoops,\nPlease enter one of the following: \n")
             help_func(input_dict)

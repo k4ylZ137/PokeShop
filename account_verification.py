@@ -108,4 +108,4 @@ def sign_up_or_in():
         'sign in': ('Sign in to an existing account', sign_in)
     }
 
-    handle_inputs(input_dict)
+    return handle_inputs(input_dict)

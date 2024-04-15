@@ -2,8 +2,10 @@ from rich.panel import Panel
 from rich.prompt import Prompt
 
 from inputs import *
-from user import *
-from db_interaction import database_manager
+from models.user import *
+from interaction.db_interaction import database_manager
+
+import models.pokemon as pokemon
 
 db = database_manager()
 
@@ -35,13 +37,13 @@ def sign_up():
             print()
 
     #Sets up new user
-    db.insert_user(username, password)
+    new_user = user(username, password, 0)
+    db.insert_user(new_user.username, new_user.password)
     #Fetches again so we can get id, for more efficient searches later
-    new_user = db.get_user_by_name(username)
-
+    choose_starter_pokemon(new_user)
     print()
 
-    return user(new_user[0][1], new_user[0][2], new_user[0][0])
+    return db.get_user_by_name(username)[0][0]
 
 
 def sign_in():
@@ -73,11 +75,9 @@ def sign_in():
             print(Panel("Incorrect password, Please try again.", style="bold red"))
             print()
 
-    new_user = db.get_user_by_name(username)
-
     print()
+    return db.get_user_by_name(username)[0][0]
 
-    return user(new_user[0][1], new_user[0][2], new_user[0][0])
 
 def check_username_exists(username):
     users = db.get_users()
@@ -91,7 +91,7 @@ def check_username_exists(username):
 def check_password_matches(password, username):
     #Accesses the user with the username entered
     raw_user = db.get_user_by_name(username)
-    user_to_check = user(raw_user[0][1], raw_user[0][2], raw_user[0][0])
+    user_to_check = user(raw_user[0][1], raw_user[0][2], raw_user[0][0], decode=True)
 
     return user_to_check.compare_password(password)
 
@@ -104,8 +104,27 @@ def sign_up_or_in():
     print('\n')
     print(Panel("Would you like to 'Sign Up' or 'Sign In'?, type 'help' for a list of inputs.", padding=(1, 2), style="bold", title="ACCOUNT VERIFICATION", title_align="left"))
     input_dict = {
-        'sign up': ('Create a new account', sign_up),
-        'sign in': ('Sign in to an existing account', sign_in)
+        'sign up': ('Create a new account 🔒', sign_up),
+        'sign in': ('Sign in to an existing account 🔑', sign_in)
     }
 
     return handle_inputs(input_dict)
+
+def choose_starter_pokemon(user):
+    print("\n")
+    choice = inquirer.list_input(
+        message="Choose your starter Pokemon from the following options: Bulbasaur, Charmander, Squirtle 🔥🌿💧:",
+        choices=["Bulbasaur 🌿", "Charmander 🔥", "Squirtle 💧"]
+    )
+
+    if choice == "Bulbasaur 🌿":
+        choice = "bulbasaur"
+    elif choice == "Charmander 🔥":
+        choice = "charmander"
+    else:
+        choice = "squirtle"
+
+    id = db.get_user_by_name(user.username)[0][0]
+
+    temp_pokemon = pokemon.pokemon(choice.lower(), 0, id)
+    db.insert_pokemon([temp_pokemon])

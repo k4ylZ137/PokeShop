@@ -1,12 +1,12 @@
 import unittest
 import sqlite3
 import os
-from db_interaction import DatabaseManager
+from db_interaction import database_manager
 
 class TestDatabaseManager(unittest.TestCase):
     def setUp(self):
         # Create a new database for testing
-        self.db = DatabaseManager('test.db')
+        self.db = database_manager('test.db')
 
     def tearDown(self):
         # Close the connection and remove the test database after each test

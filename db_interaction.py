@@ -1,6 +1,6 @@
 import sqlite3
 
-class DatabaseManager:
+class database_manager:
     def __init__(self, db_name='database.db'):
         # Connect to the database (creates a new database if it doesn't exist)
         self.conn = sqlite3.connect(db_name)
@@ -46,6 +46,11 @@ class DatabaseManager:
 
     def get_users(self):
         self.cursor.execute("SELECT * FROM users")
+        users = self.cursor.fetchall()
+        return users
+
+    def get_user_by_name(self, username):
+        self.cursor.execute("SELECT * FROM users WHERE username = ?", (username,))
         users = self.cursor.fetchall()
         return users
 

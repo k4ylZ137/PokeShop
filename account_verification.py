@@ -1,71 +1,111 @@
+from rich.panel import Panel
+from rich.prompt import Prompt
+
 from inputs import *
 from user import *
+from db_interaction import database_manager
+
+db = database_manager()
 
 def sign_up():
-    valid = False
-    #Loop to check if the username exists in records
-    while valid == False:
-        username = input("Enter your username: ").lower()
-        valid = check_username_unique(username)
 
-    password = input("Enter your password: ")
+    print(Panel('Enter "back" to return to the previous menu.', style="green"))
+    print()
+
+    valid = False
+    while valid == False:
+        username = Prompt.ask("Enter your username").lower()
+        check_back_out(username)
+        valid = not check_username_exists(username)
+
+        if not valid:
+            print(Panel("Username already exists, Please try again.", style="bold red"))
+            print()
+
+    valid = False
+    while valid == False:
+        password = Prompt.ask("Enter your Password", password=True).lower()
+        check_back_out(password)
+        confirm_password = Prompt.ask("Re-enter your Password", password=True).lower()
+        check_back_out(confirm_password)
+        valid = password == confirm_password and bool(re.search(r'\d', password)) and bool(re.search(r'\w', password))
+
+        if not valid:
+            print(Panel("Passwords must match and include Letters and Numbers, Please try again.", style="bold red"))
+            print()
 
     #Sets up new user
-    valid_user = user(username, password)
+    db.insert_user(username, password)
+    #Fetches again so we can get id, for more efficient searches later
+    new_user = db.get_user_by_name(username)
 
-    #Sets the current user as the account just created
-    valid_user.set_current_user(valid_user)
-    print("-"*60)
+    print()
+
+    return user(new_user[0][1], new_user[0][2], new_user[0][0])
+
 
 def sign_in():
-    print("\n" + "-"*60 + "\n")
+
+    print(Panel('Enter "back" to return to the previous menu.', style="green"))
+    print()
+
+    username = None
 
     valid = False
-
     #Loop to check if the username exists in records
     while valid == False:
-        username = input("Enter your username: ").lower()
+        username = Prompt.ask("Enter your Username").lower()
+        check_back_out(username)
         valid = check_username_exists(username)
+
+        if not valid:
+            print(Panel("Account does not exist, Please try again.", style="bold red"))
+            print()
 
     #Loop to check if the password matches the entered username
     valid = False
     while valid == False:
-        password = input("Enter your password: ")
-        valid = check_password_matches(password)
-    print("-"*60)
+        password = Prompt.ask("Enter your Password", password=True).lower()
+        check_back_out(password)
+        valid = check_password_matches(password, username)
+
+        if not valid:
+            print(Panel("Incorrect password, Please try again.", style="bold red"))
+            print()
+
+    new_user = db.get_user_by_name(username)
+
+    print()
+
+    return user(new_user[0][1], new_user[0][2], new_user[0][0])
 
 def check_username_exists(username):
-    #Loops over all user objects
-    for user in user._all_users:
-        if user.get_username().lower() == username:
-
-            #Sets the current user as the user with the username entered
-            user.set_current_user(user)
+    users = db.get_users()
+    #Loops over all user objects and checks if the username exists
+    for user in users:
+        if user[1].lower() == username:
             return True
         else:
-            print("Username does not exist. Try again.")
             return False
 
-def check_password_matches(password):
+def check_password_matches(password, username):
     #Accesses the user with the username entered
-    current_user = user._all_users[0].get_current_user()
+    raw_user = db.get_user_by_name(username)
+    user_to_check = user(raw_user[0][1], raw_user[0][2], raw_user[0][0])
 
-    if user.compare_password(current_user, password) == True:
-        return True
-    else:
-        print("Password does not match. Try again.")
-        return False
+    return user_to_check.compare_password(password)
 
-def check_username_unique(username):
-    #Sets up a list of all usernames
-    taken_names = []
+def check_back_out(input):
+    if input == 'back':
+        print(Panel("Returning to the previous menu.", style="bold"))
+        sign_up_or_in()
 
-    for user in user._all_users:
-        taken_names.append(user.get_username().lower())
+def sign_up_or_in():
+    print('\n')
+    print(Panel("Would you like to 'Sign Up' or 'Sign In'?, type 'help' for a list of inputs.", padding=(1, 2), style="bold", title="ACCOUNT VERIFICATION", title_align="left"))
+    input_dict = {
+        'sign up': ('Create a new account', sign_up),
+        'sign in': ('Sign in to an existing account', sign_in)
+    }
 
-    #Checks if username already in use or not
-    if username in taken_names:
-        print("Username already taken. Try again.")
-        return False
-    else:
-        return True
+    handle_inputs(input_dict)

@@ -25,6 +25,7 @@ class database_manager:
                 name TEXT NOT NULL,
                 price REAL NOT NULL,
                 user_id INTEGER,
+                listed BOOLEAN DEFAULT 0,
                 FOREIGN KEY(user_id) REFERENCES users(id)
             )
         ''')
@@ -32,9 +33,9 @@ class database_manager:
         # Commit the changes
         self.conn.commit()
 
-    def insert_pokemon(self, pokemon_list, user_id):
+    def insert_pokemon(self, pokemon_list):
         for pokemon in pokemon_list:
-            self.cursor.execute("INSERT INTO pokemon (name, price, user_id) VALUES (?, ?, ?)", (pokemon['name'], pokemon['price'], user_id))
+            self.cursor.execute("INSERT INTO pokemon (name, price, user_id) VALUES (?, ?, ?)", (pokemon.name, pokemon.price, pokemon.user))
         self.conn.commit()
 
     def insert_user(self, username, password):
@@ -58,3 +59,12 @@ class database_manager:
         self.cursor.execute("SELECT * FROM pokemon WHERE user_id = ?", (user_id,))
         pokemon = self.cursor.fetchall()
         return pokemon
+
+    def set_pokemon_as_listed(self, pokemon_id):
+        self.cursor.execute("UPDATE pokemon SET listed = NOT listed WHERE id = ?", (pokemon_id,))
+        self.conn.commit()
+
+    def set_pokemon_as_sold(self, pokemon_id, user_id):
+        self.cursor.execute("UPDATE pokemon SET user_id = ? WHERE id = ?", (user_id, pokemon_id))
+        self.conn.commit()
+        self.set_pokemon_as_listed(pokemon_id)

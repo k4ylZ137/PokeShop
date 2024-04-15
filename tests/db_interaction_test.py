@@ -1,7 +1,7 @@
 import unittest
 import sqlite3
 import os
-from db_interaction import database_manager
+from interaction.db_interaction import database_manager
 
 class TestDatabaseManager(unittest.TestCase):
     def setUp(self):

@@ -1,11 +1,17 @@
 import bcrypt
+import rich
+from rich.panel import Panel
+import inquirer
 
 class user:
 
-    def __init__(self, username, password, id):
+    def __init__(self, username, password, id, decode=False):
         self.id = id
         self.username = username
-        self.password = self.hash_password(password)
+        if decode:
+            self.password = password
+        else:
+            self.password = self.hash_password(password)
         self.pokebits = 1500
 
     def get_username(self):
@@ -17,7 +23,7 @@ class user:
     def update_pokebits(self, amount):
         self.pokebits = self.pokebits + amount
         if self.pokebits < -1500:
-                print("Insufficient funds for this operation. We are seizing your pokemon and deactiving your account.")
+                print("Insufficient funds for this operation. We are seizing your pokemon and deactiving your account. ⚠️")
                 exit()
         return self.pokebits
 

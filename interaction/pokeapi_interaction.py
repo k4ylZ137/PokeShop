@@ -2,8 +2,6 @@ from rich.panel import Panel
 
 import requests
 
-import models.pokemon as pokemon
-
 def get_pokemon_catch_rate(pokemon_name):
     url = f"https://pokeapi.co/api/v2/pokemon-species/{pokemon_name}/"
     response = requests.get(url)
@@ -12,6 +10,30 @@ def get_pokemon_catch_rate(pokemon_name):
         pokemon_data = response.json()
         catch_rate = pokemon_data['capture_rate']
         return catch_rate
+    else:
+        print(f'Error: {response.status_code}')
+        return None
+
+def get_pokemon_is_legendary(pokemon_name):
+    url = f"https://pokeapi.co/api/v2/pokemon-species/{pokemon_name}/"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        pokemon_data = response.json()
+        is_legendary = pokemon_data['is_legendary']
+        return is_legendary
+    else:
+        print(f'Error: {response.status_code}')
+        return None
+
+def get_pokemon_is_mythical(pokemon_name):
+    url = f"https://pokeapi.co/api/v2/pokemon-species/{pokemon_name}/"
+    response = requests.get(url)
+
+    if response.status_code == 200:
+        pokemon_data = response.json()
+        is_mythical = pokemon_data['is_mythical']
+        return is_mythical
     else:
         print(f'Error: {response.status_code}')
         return None

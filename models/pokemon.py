@@ -14,8 +14,15 @@ class pokemon:
         self.user = user
 
     def set_price(self, name):
-        price = random.randint(2000, 2300)
-        return int(( 1 - ( pokeapi_interaction.get_pokemon_catch_rate(name) / 255 )) * price)
+        base_price = random.randint(850, 1000)
+        price = int(( 1 - ( pokeapi_interaction.get_pokemon_catch_rate(name) / 255 )) * base_price)
+
+        if pokeapi_interaction.get_pokemon_is_legendary(name):
+            price *=10
+        if pokeapi_interaction.get_pokemon_is_mythical(name):
+            price *=7
+
+        return price
 
     def set_listed(self):
         self.listed = not self.listed

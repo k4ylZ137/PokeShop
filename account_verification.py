@@ -19,7 +19,8 @@ def sign_up():
     valid = False
     while valid == False:
         username = Prompt.ask("Enter your username").lower()
-        check_back_out(username)
+        if check_back_out(username):
+            return
         valid = not check_username_exists(username)
 
         if not valid:
@@ -29,9 +30,11 @@ def sign_up():
     valid = False
     while valid == False:
         password = Prompt.ask("Enter your Password", password=True).lower()
-        check_back_out(password)
+        if check_back_out(password):
+            return
         confirm_password = Prompt.ask("Re-enter your Password", password=True).lower()
-        check_back_out(confirm_password)
+        if check_back_out(confirm_password):
+            return
         valid = password == confirm_password and bool(re.search(r'\d', password)) and bool(re.search(r'\w', password))
 
         if not valid:
@@ -44,7 +47,6 @@ def sign_up():
     #Fetches again so we can get id, for more efficient searches later
     choose_starter_pokemon(new_user)
     print()
-
     return db.get_user_by_name(username)[0][0]
 
 
@@ -59,7 +61,8 @@ def sign_in():
     #Loop to check if the username exists in records
     while valid == False:
         username = Prompt.ask("Enter your Username").lower()
-        check_back_out(username)
+        if check_back_out(username):
+            return
         valid = check_username_exists(username)
 
         if not valid:
@@ -70,7 +73,8 @@ def sign_in():
     valid = False
     while valid == False:
         password = Prompt.ask("Enter your Password", password=True).lower()
-        check_back_out(password)
+        if check_back_out(password):
+            return
         valid = check_password_matches(password, username)
 
         if not valid:
@@ -87,8 +91,6 @@ def check_username_exists(username):
     for user in users:
         if user[1].lower() == username:
             return True
-        else:
-            return False
 
 def check_password_matches(password, username):
     #Accesses the user with the username entered
@@ -100,17 +102,19 @@ def check_password_matches(password, username):
 def check_back_out(input):
     if input == 'back':
         print(Panel("Returning to the previous menu.", style="bold"))
-        sign_up_or_in()
+        return True
 
 def sign_up_or_in():
-    print('\n')
-    print(Panel("Would you like to 'Sign Up'🔒 or 'Sign In'🔑?, type 'help' for a list of inputs.", padding=(1, 2), title="Account Verification 🔐", title_align="left"))
-    input_dict = {
-        'sign up': ('Create a new account 🔒', sign_up),
-        'sign in': ('Sign in to an existing account 🔑', sign_in)
-    }
+    while True:
+        print('\n')
+        print(Panel("Would you like to 'Sign Up' or 'Sign In'?, type 'help' for a list of inputs.", padding=(1, 2), style="bold", title="ACCOUNT VERIFICATION", title_align="left"))
+        input_dict = {
+            'sign up': ('Create a new account 🔒', sign_up),
+            'sign in': ('Sign in to an existing account 🔑', sign_in)
+        }
 
-    return handle_inputs(input_dict)
+        if handle_inputs(input_dict):
+            break
 
 def choose_starter_pokemon(user):
     print("\n")

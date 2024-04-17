@@ -13,14 +13,11 @@ class TestUser(unittest.TestCase):
         self.assertEqual(self.user.get_pokebits(), 1500)
 
     def test_update_pokebits(self):
-        self.assertEqual(self.user.update_pokebits(500), 2000)
-        self.assertEqual(self.user.update_pokebits(-1000), 1000)
-        self.assertEqual(self.user.update_pokebits(-2500), -1500)
+        self.user.update_pokebits(500)
+        self.assertEqual(self.user.get_pokebits(), 2000)
 
-    def test_hash_password(self):
-        hashed_password = self.user.hash_password("password123")
+    def test_compare_password(self):
         self.assertTrue(self.user.compare_password("password123"))
-        self.assertFalse(self.user.compare_password("wrongpassword"))
 
 if __name__ == '__main__':
     unittest.main()

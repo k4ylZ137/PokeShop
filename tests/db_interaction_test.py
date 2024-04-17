@@ -1,73 +1,67 @@
 import unittest
-import sqlite3
-import os
+
 from interaction.db_interaction import database_manager
 
 class TestDatabaseManager(unittest.TestCase):
+
     def setUp(self):
-        # Create a new database for testing
-        self.db = database_manager('test.db')
+        self.db = database_manager(':memory:')
 
     def tearDown(self):
-        # Close the connection and remove the test database after each test
-        self.db.conn.close()
-        os.remove('test.db')
+        self.db.close_connection()
 
     def test_insert_user(self):
-        # Define a test user
-        username = 'test_user'
-        password = 'test_password'
-
-        # Insert the user into the database
-        self.db.insert_user(username, password)
-
-        # Query the database to check if the user was inserted correctly
-        self.db.cursor.execute('SELECT * FROM users WHERE username = ?', (username,))
-        data = self.db.cursor.fetchone()
-
-        # Check that the data matches the inserted user
-        self.assertEqual(data[1], username)
-        self.assertEqual(data[2], password)
-
-    def test_get_users(self):
-        # Define a test user
-        username = 'test_user'
-        password = 'test_password'
-
-        # Insert the user into the database
-        self.db.insert_user(username, password)
-
-        # Get the users from the database
+        self.db.insert_user('user1', 'password1')
+        self.db.insert_user('user2', 'password2')
         users = self.db.get_users()
+        self.assertEqual(len(users), 2)
+        self.assertEqual(users[0][1], 'user1')
+        self.assertEqual(users[1][1], 'user2')
 
-        # Check that the returned data matches the inserted user
-        self.assertEqual(users[0][1], username)
-        self.assertEqual(users[0][2], password)
-        self.assertEqual(users[0][3], 1500)
+    def test_get_user_by_name(self):
+        self.db.insert_user('user1', 'password1')
+        self.db.insert_user('user2', 'password2')
+        user = self.db.get_user_by_name('user1')
+        self.assertEqual(len(user), 1)
+        self.assertEqual(user[0][1], 'user1')
 
-    def test_get_pokemon(self):
-        # Define a test user and Pokemon
-        username = 'test_user'
-        password = 'test_password'
-        pokemon_list = [{'name': 'Pikachu', 'price': 100.0}]
+    def test_insert_pokemon(self):
+        class Pokemon:
+            def __init__(self, name, price, listed, user):
+                self.name = name
+                self.price = price
+                self.listed = listed
+                self.user = user
 
-        # Insert the user into the database
-        self.db.insert_user(username, password)
-
-        # Get the user_id of the inserted user
-        self.db.cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
-        user_id = self.db.cursor.fetchone()[0]
-
-        # Insert the Pokemon into the database
-        self.db.insert_pokemon(pokemon_list, user_id)
-
-        # Get the Pokemon from the database
-        pokemon = self.db.get_pokemon(user_id)
-
-        # Check that the returned data matches the inserted Pokemon
+        pokemon_list = [
+            Pokemon('Pikachu', 100, True, 1),
+            Pokemon('Charizard', 200, False, 2),
+            Pokemon('Bulbasaur', 50, True, 1)
+        ]
+        self.db.insert_pokemon(pokemon_list)
+        pokemon = self.db.get_pokemon(1)
+        self.assertEqual(len(pokemon), 2)
         self.assertEqual(pokemon[0][1], 'Pikachu')
-        self.assertEqual(pokemon[0][2], 100.0)
-        self.assertEqual(pokemon[0][3], user_id)
+        self.assertEqual(pokemon[1][1], 'Bulbasaur')
+
+    def test_get_pokemon_listed(self):
+        class Pokemon:
+            def __init__(self, name, price, listed, user):
+                self.name = name
+                self.price = price
+                self.listed = listed
+                self.user = user
+
+        pokemon_list = [
+            Pokemon('Pikachu', 100, True, 1),
+            Pokemon('Charizard', 200, False, 2),
+            Pokemon('Bulbasaur', 50, True, 1)
+        ]
+        self.db.insert_pokemon(pokemon_list)
+        listed_pokemon = self.db.get_pokemon_listed()
+        self.assertEqual(len(listed_pokemon), 2)
+        self.assertEqual(listed_pokemon[0][1], 'Pikachu')
+        self.assertEqual(listed_pokemon[1][1], 'Bulbasaur')
 
 if __name__ == '__main__':
     unittest.main()

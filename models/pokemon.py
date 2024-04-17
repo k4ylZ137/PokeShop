@@ -6,11 +6,11 @@ db = database_manager()
 
 class pokemon:
 
-    def __init__(self, name, id, user):
+    def __init__(self, name, id, user, listed=False):
         self.id = id
         self.name = name
         self.price = self.set_price(name)
-        self.listed = False
+        self.listed = listed
         self.user = user
 
     def set_price(self, name):

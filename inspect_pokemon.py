@@ -14,8 +14,6 @@ from io import BytesIO
 
 import inputs
 
-from main_menu import *
-
 class inspect_pokemon:
     """
     A class representing a Pokemon inspector.
@@ -46,6 +44,7 @@ class inspect_pokemon:
         self.pokemon = inspect_pokemon
         self.name = inspect_pokemon.name
         self.price = inspect_pokemon.price
+        self.listed = inspect_pokemon.listed
 
         pokemon_data = poke_api.get_pokemon_for_inspect(self.name)
         self.sprite = pokemon_data['sprite']
@@ -82,34 +81,35 @@ class inspect_pokemon:
 
         # Define input dictionary
         input_dict = {
-            'return': ('Back out to previous page', render_main_menu),
+            'rtn': ('Return to previous page', self.back_out),
         }
 
         title = 'What would you like to do?'
         text = '  Would you like to '
 
-        if self.pokemon.listed:
-            input_dict['rmlist'] = ('Remove listing', self.list_pokemon)
-            text += 'Remove listing (rmLists), '
-        else:
-            input_dict['list'] = ('List Pokemon for sale', self.list_pokemon)
-            text += 'List this Pokemon (Pokemon), '
+        if self.current_user == self.pokemon.user:
+            if self.pokemon.listed:
+                input_dict['unlist'] = ('Remove listing', self.list_pokemon)
+                text += 'Remove listing (unlist), '
+            else:
+                input_dict['list'] = ('List Pokemon for sale', self.list_pokemon)
+                text += 'List this Pokemon (list), '
 
-        if self.current_user != self.pokemon.user:
+        if self.current_user != self.pokemon.user and self.pokemon.listed:
             input_dict['buy'] = ('Buy this pokemon', self.buy)
-            text += 'Buy, '
+            text += 'Buy this Pokemon (buy), '
 
-        text += 'or Return?'
+        text += 'or Return (rtn)?'
 
         rich.print(Panel(text, title=title))
         inputs.handle_inputs(input_dict)
 
     def buy(self):
-        print('buying...')
-        self.pokemon.sell('ash')
+        print('Buying Pokemon...')
+        self.pokemon.sell(self.current_user)
 
     def list_pokemon(self):
-        print('listing...')
+        print('listing Pokemon...')
         self.pokemon.set_listed()
 
     def print_sprite(self, sprite):
@@ -134,3 +134,6 @@ class inspect_pokemon:
         # Convert the sprite to ASCII with the specified options
         output = ascii_magic.from_image(temp.name)
         output.to_terminal()
+
+    def back_out(self):
+        return

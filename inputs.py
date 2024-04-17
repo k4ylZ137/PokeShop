@@ -37,7 +37,7 @@ def help_func(input_dict):
         if command != list(input_dict.keys())[-1]:
             text += "\n"
 
-    rich.print(Panel(text, title="Available inputs", style="blue"))
+    rich.print(Panel(text, title="Available inputs 🆘", style="blue"))
 
 def handle_inputs(input_dict: dict):
     # Update the subbed in dict to include static commands

@@ -35,7 +35,7 @@ class database_manager:
 
     def insert_pokemon(self, pokemon_list):
         for pokemon in pokemon_list:
-            self.cursor.execute("INSERT INTO pokemon (name, price, user_id) VALUES (?, ?, ?)", (pokemon.name, pokemon.price, pokemon.user))
+            self.cursor.execute("INSERT INTO pokemon (name, price, user_id, listed) VALUES (?, ?, ?, ?)", (pokemon.name, pokemon.price, pokemon.user, pokemon.listed))
         self.conn.commit()
 
     def insert_user(self, username, password):

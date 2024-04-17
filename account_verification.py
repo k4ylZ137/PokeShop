@@ -113,8 +113,10 @@ def sign_up_or_in():
             'sign in': ('Sign in to an existing account 🔑', sign_in)
         }
 
-        if handle_inputs(input_dict):
+        result = handle_inputs(input_dict)
+        if result:
             break
+    return result
 
 def choose_starter_pokemon(user):
     print("\n")

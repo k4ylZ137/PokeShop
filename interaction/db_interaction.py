@@ -60,6 +60,11 @@ class database_manager:
         pokemon = self.cursor.fetchall()
         return pokemon
 
+    def get_pokemon_listed(self):
+        self.cursor.execute("SELECT * FROM pokemon WHERE listed = TRUE")
+        pokemon = self.cursor.fetchall()
+        return pokemon
+
     def set_pokemon_as_listed(self, pokemon_id):
         self.cursor.execute("UPDATE pokemon SET listed = NOT listed WHERE id = ?", (pokemon_id,))
         self.conn.commit()

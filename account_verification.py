@@ -91,8 +91,6 @@ def check_username_exists(username):
     for user in users:
         if user[1].lower() == username:
             return True
-        else:
-            return False
 
 def check_password_matches(password, username):
     #Accesses the user with the username entered

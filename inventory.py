@@ -11,8 +11,8 @@ class inventory(pokemon_list):
 
     def __init__(self, current_user, listed_pokemon):
 
-        title = Text("What would you like to buy today?", justify="center")
-        print(Panel(title, style='bold', title='Store', padding=(1, 1)))
+        title = Text("What Pokemon would you like to take a look at?", justify="center")
+        print(Panel(title, style='bold', title='Inventory', padding=(1, 1)))
         print()
 
         if len(listed_pokemon) < 1:

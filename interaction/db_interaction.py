@@ -1,7 +1,7 @@
 import sqlite3
 
 class database_manager:
-    def __init__(self, db_name='database.db'):
+    def __init__(self, db_name='PokeMart.db'):
         # Connect to the database (creates a new database if it doesn't exist)
         self.conn = sqlite3.connect(db_name)
 
@@ -60,6 +60,15 @@ class database_manager:
         pokemon = self.cursor.fetchall()
         return pokemon
 
+    def drop_user(self, user_id):
+        self.cursor.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        self.conn.commit()
+        self.drop_pokemon(user_id)
+
+    def drop_pokemon(self, user_id):
+        self.cursor.execute("DELETE FROM pokemon WHERE user_id = ?", (user_id,))
+        self.conn.commit()
+
     def get_pokemon_listed(self):
         self.cursor.execute("SELECT * FROM pokemon WHERE listed = TRUE")
         pokemon = self.cursor.fetchall()
@@ -73,3 +82,12 @@ class database_manager:
         self.cursor.execute("UPDATE pokemon SET user_id = ? WHERE id = ?", (user_id, pokemon_id))
         self.conn.commit()
         self.set_pokemon_as_listed(pokemon_id)
+
+    def get_user(self, id):
+        self.cursor.execute("SELECT * FROM users WHERE id = ?", (id,))
+        users = self.cursor.fetchall()
+        return users
+
+    def update_user_pokebts(self, id, poke_bits):
+        self.cursor.execute("UPDATE users SET poke_bits = ? WHERE id = ?", (poke_bits, id))
+        self.conn.commit()

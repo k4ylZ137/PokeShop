@@ -56,10 +56,11 @@ def sign_in():
     print()
 
     username = None
-
     valid = False
-    #Loop to check if the username exists in records
-    while valid == False:
+    attempts = 0
+
+    # Loop to check if the username exists in records
+    while not valid:
         username = Prompt.ask("Enter your Username").lower()
         if check_back_out(username):
             return
@@ -69,9 +70,9 @@ def sign_in():
             print(Panel("Account does not exist, Please try again.", style="bold red"))
             print()
 
-    #Loop to check if the password matches the entered username
+    # Loop to check if the password matches the entered username
     valid = False
-    while valid == False:
+    while not valid and attempts < 3:
         password = Prompt.ask("Enter your Password", password=True).lower()
         if check_back_out(password):
             return
@@ -80,6 +81,11 @@ def sign_in():
         if not valid:
             print(Panel("Incorrect password, Please try again.", style="bold red"))
             print()
+            attempts += 1
+
+        if attempts == 3:
+            print(Panel("Too many invalid attempts. Please try again later.", style="bold red"))
+            return
 
     print()
     return db.get_user_by_name(username)[0][0]

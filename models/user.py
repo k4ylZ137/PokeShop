@@ -20,13 +20,6 @@ class user:
     def get_pokebits(self):
         return self.pokebits
 
-    def update_pokebits(self, amount):
-        self.pokebits = self.pokebits + amount
-        if self.pokebits < -1500:
-                print("Insufficient funds for this operation. We are seizing your pokemon and deactiving your account. ⚠️")
-                exit()
-        return self.pokebits
-
     def hash_password(self, password):
         # Hash the password using bcrypt
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())

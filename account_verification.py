@@ -9,7 +9,7 @@ import models.pokemon as pokemon
 
 db = database_manager()
 
-back_message = Panel('Enter "back" to return to the previous menu. 🔙', style="green")
+back_message = Panel('Enter "back" to return to the previous menu. 🔙')
 
 def sign_up():
 
@@ -107,13 +107,13 @@ def check_password_matches(password, username):
 
 def check_back_out(input):
     if input == 'back':
-        print(Panel("Returning to the previous menu.", style="bold"))
+        print(Panel("Returning to the previous menu. 🔙", style="bold"))
         return True
 
 def sign_up_or_in():
     while True:
         print('\n')
-        print(Panel("Would you like to 'Sign Up' or 'Sign In'?, type 'help' for a list of inputs.", padding=(1, 2), style="bold", title="ACCOUNT VERIFICATION", title_align="left"))
+        print(Panel("Would you like to 'Sign Up'🔒 or 'Sign In'🔑?, type 'help' for a list of inputs.", padding=(1, 2), style="bold", title="Account Verification 🔐", title_align="left"))
         input_dict = {
             'sign up': ('Create a new account 🔒', sign_up),
             'sign in': ('Sign in to an existing account 🔑', sign_in)

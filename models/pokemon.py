@@ -37,7 +37,7 @@ class pokemon:
         new_buyer_coin = buyer_coin - self.price
 
         if new_buyer_coin <= -1500:
-            print("[bold red blink]WARNING: You are too far in debt, we will be seizing your Pokemon and deleting your account![/bold red blink]")
+            print("[bold red blink]WARNING: Insufficient funds for this operation. We are seizing your pokemon and deactiving your account. ⚠️![/bold red blink]")
             db.drop_user(buyer[0][0])
             exit()
         else:

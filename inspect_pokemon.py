@@ -62,7 +62,7 @@ class inspect_pokemon:
 
         print("\n"*2)
         title = Text("Inspecting " + self.name + " -- " + str(self.price) + " PokeBts 🪙", justify="center")
-        print(Panel(title, style='bold', title='INSPECT', padding=(1, 1)))
+        print(Panel(title, style='bold', title='Inspect', padding=(1, 1)))
 
         self.print_sprite(self.sprite)
 
@@ -73,9 +73,9 @@ class inspect_pokemon:
             f"\tHeight: {self.height}"
         )
 
-        print(Panel(Text(info_text), title='STATS', style='bold', padding=(1, 1)))
+        print(Panel(Text(info_text), title='Stats', style='bold', padding=(1, 1)))
 
-        print(Panel(Text('    >    '.join(self.evolution_chain), justify='center'), title='EVOLUTION CHAIN', style='bold blue', padding=(1, 1)))
+        print(Panel(Text('    >    '.join(self.evolution_chain), justify='center'), title='Evolution Chain', style='bold blue', padding=(1, 1)))
 
         print("\n")
 
@@ -105,11 +105,11 @@ class inspect_pokemon:
         inputs.handle_inputs(input_dict)
 
     def buy(self):
-        print('Buying Pokemon...')
+        print(Panel('Buying Pokemon...'))
         self.pokemon.sell(self.current_user)
 
     def list_pokemon(self):
-        print('listing Pokemon...')
+        print(Panel('listing Pokemon...'))
         self.pokemon.set_listed()
 
     def print_sprite(self, sprite):

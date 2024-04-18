@@ -89,7 +89,7 @@ class inspect_pokemon:
 
         if self.current_user == self.pokemon.user:
             if self.pokemon.listed:
-                input_dict['unlist'] = ('Remove listing', self.list_pokemon)
+                input_dict['unlist'] = ('Remove listing', self.unlist_pokemon)
                 text += 'Remove listing (unlist), '
             else:
                 input_dict['list'] = ('List Pokemon for sale', self.list_pokemon)
@@ -110,6 +110,10 @@ class inspect_pokemon:
 
     def list_pokemon(self):
         print(Panel('listing Pokemon...'))
+        self.pokemon.set_listed()
+
+    def unlist_pokemon(self):
+        print(Panel('unlisting Pokemon...'))
         self.pokemon.set_listed()
 
     def print_sprite(self, sprite):

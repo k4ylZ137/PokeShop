@@ -16,7 +16,7 @@ class pokemon_list:
             })
 
         # Create a list of Pokemon names
-        pokemon_names = [p['name'] + " -- " + str(p['price'] + 0.99) + " PokeBts 🪙" for p in pokemon_to_inspect]
+        pokemon_names = [p['name'] + " -- " + str(int(p['price'])) + " PokeBts 🪙" for p in pokemon_to_inspect]
         pokemon_names.append('Return to previous page 🔙')
 
         questions = [
@@ -34,7 +34,7 @@ class pokemon_list:
         # Find the selected Pokemon object
         selected_pokemon = next(
             (p for p in pokemon_to_inspect
-                if p['name'] + " -- " + str(p['price'] + 0.99) +
+                if p['name'] + " -- " + str(int(p['price'])) +
                 " PokeBts 🪙" == answers['pokemon']), None
         )
 

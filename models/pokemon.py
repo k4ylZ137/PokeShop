@@ -27,8 +27,10 @@ class pokemon:
         return price
 
     def set_listed(self):
-        self.listed = not self.listed
-        db.set_pokemon_as_listed(self.id)
+        confirm = Confirm.ask("Are you sure you want to List this Pokemon?")
+        if confirm:
+            self.listed = not self.listed
+            db.set_pokemon_as_listed(self.id)
 
     def sell(self, buyer_id):
 

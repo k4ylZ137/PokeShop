@@ -39,7 +39,8 @@ class menu:
 
     def inventory_func(self):
         db = database_manager()
-        listed_pokemon = db.get_pokemon(self.USER)
+        user = db.get_user_by_id(self.USER)
+        listed_pokemon = db.get_pokemon(user[0][1])
 
         inv_page = inventory(self.USER, listed_pokemon)
 

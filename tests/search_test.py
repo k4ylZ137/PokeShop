@@ -39,45 +39,45 @@ class TestSearch(unittest.TestCase):
     def test_if_can_detect_admin_pokemon(self):
         search_page = search()
 
-        result = search_page.get_searched_pokemon("eevee")
+        result = search_page.get_searched_pokemon("eevee", "Admin")
         self.assertTrue(result[1],"eevee" )
 
-        result = search_page.get_searched_pokemon("squirtle")
+        result = search_page.get_searched_pokemon("squirtle", "Admin")
         self.assertTrue(result[1],"Squirtle" )
 
 
     def test_if_can_detect_not_admin_pokemon(self):
         search_page = search()
 
-        self.assertEqual(search_page.get_searched_pokemon("Pikachu"),None)
-        self.assertEqual(search_page.get_searched_pokemon("Mew"),None )
+        self.assertEqual(search_page.get_searched_pokemon("Pikachu", "Admin"),None)
+        self.assertEqual(search_page.get_searched_pokemon("Mew", "Admin"),None )
 
 
     def test_insert_to_user_if_pokemon_new(self):
         search_page = search()
-        admin_pokemons = db.get_pokemon(1)
+        admin_pokemons = db.get_pokemon("Admin")
         for pokemon in admin_pokemons:
             self.assertNotEqual(pokemon[1], "mew")
 
-        searched_pokemon =  search_page.insert_pokemon("mew")
+        searched_pokemon =  search_page.insert_pokemon("mew", "Admin")
 
-        admin_pokemons = db.get_pokemon(1)
+        admin_pokemons = db.get_pokemon("Admin")
         self.assertEqual(admin_pokemons[len(admin_pokemons)-1][1], "mew")
 
     def test_update_price(self):
         from models.pokemon import pokemon
         search_page = search()
 
-        db.insert_pokemon([pokemon("pikachu", 5, 2)])
-        pokemons = db.get_pokemon(2)
+        db.insert_pokemon([pokemon("pikachu", 5, 1)])
+        pokemons = db.get_pokemon("Admin")
 
         for pokemon_ in pokemons:
             if pokemon_[1] == "pikachu":
                 searched_pokemon = pokemon_
                 original_price = pokemon_[2]
 
-        the_10 = original_price * 1.0
-        expected_price = original_price + the_10
+                the_10 = original_price * 1.0
+                expected_price = original_price + the_10
 
         result = search_page.update_price(searched_pokemon)
         result = result[2]

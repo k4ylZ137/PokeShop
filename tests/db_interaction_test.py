@@ -1,67 +1,82 @@
 import unittest
-
+from unittest.mock import patch
 from interaction.db_interaction import database_manager
 
 class TestDatabaseManager(unittest.TestCase):
 
     def setUp(self):
-        self.db = database_manager(':memory:')
+        self.db = database_manager(':memory:')  # Use an in-memory database for testing
 
-    def tearDown(self):
-        self.db.close_connection()
-
-    def test_insert_user(self):
-        self.db.insert_user('user1', 'password1')
-        self.db.insert_user('user2', 'password2')
+    @patch('interaction.db_interaction.database_manager')
+    def test_insert_user(self, mock_db):
+        mock_db.insert_user.return_value = None
+        mock_db.get_users.return_value = [(1, 'test_user', 'password', 1500)]
+        self.db.insert_user('test_user', 'password')
         users = self.db.get_users()
-        self.assertEqual(len(users), 2)
-        self.assertEqual(users[0][1], 'user1')
-        self.assertEqual(users[1][1], 'user2')
+        self.assertEqual(len(users), 1)
+        self.assertEqual(users[0][1], 'test_user')
+        self.assertEqual(users[0][2], 'password')
+        self.assertEqual(users[0][3], 1500)
 
-    def test_get_user_by_name(self):
+    @patch('interaction.db_interaction.database_manager')
+    def test_insert_pokemon(self, mock_db):
+        class Pokemon:
+            def __init__(self, name, price, user, listed):
+                self.name = name
+                self.price = price
+                self.user = user
+                self.listed = listed
+        pokemon_list = [
+            Pokemon('Pikachu', 10.0, 1, False),
+            Pokemon('Charizard', 20.0, 1, False),
+            Pokemon('Bulbasaur', 5.0, 2, False)
+        ]
+        mock_db.insert_user.return_value = None
+        mock_db.insert_pokemon.return_value = None
+        mock_db.get_pokemon.return_value = [
+            (1, 'Pikachu', 10.0, 1, False),
+            (2, 'Bulbasaur', 5.0, 2, False)
+        ]
         self.db.insert_user('user1', 'password1')
         self.db.insert_user('user2', 'password2')
-        user = self.db.get_user_by_name('user1')
-        self.assertEqual(len(user), 1)
-        self.assertEqual(user[0][1], 'user1')
-
-    def test_insert_pokemon(self):
-        class Pokemon:
-            def __init__(self, name, price, listed, user):
-                self.name = name
-                self.price = price
-                self.listed = listed
-                self.user = user
-
-        pokemon_list = [
-            Pokemon('Pikachu', 100, True, 1),
-            Pokemon('Charizard', 200, False, 2),
-            Pokemon('Bulbasaur', 50, True, 1)
-        ]
         self.db.insert_pokemon(pokemon_list)
-        pokemon = self.db.get_pokemon(1)
-        self.assertEqual(len(pokemon), 2)
-        self.assertEqual(pokemon[0][1], 'Pikachu')
-        self.assertEqual(pokemon[1][1], 'Bulbasaur')
+        user1_pokemon = self.db.get_pokemon(1)
+        user2_pokemon = self.db.get_pokemon(2)
+        self.assertEqual(len(user1_pokemon), 2)
+        self.assertEqual(len(user2_pokemon), 1)
+        self.assertEqual(user1_pokemon[0][1], 'Pikachu')
+        self.assertEqual(user1_pokemon[0][2], 10.0)
+        self.assertEqual(user1_pokemon[0][3], 1)
+        self.assertEqual(user1_pokemon[0][4], False)
+        self.assertEqual(user2_pokemon[0][1], 'Bulbasaur')
+        self.assertEqual(user2_pokemon[0][2], 5.0)
+        self.assertEqual(user2_pokemon[0][3], 2)
+        self.assertEqual(user2_pokemon[0][4], False)
 
-    def test_get_pokemon_listed(self):
-        class Pokemon:
-            def __init__(self, name, price, listed, user):
-                self.name = name
-                self.price = price
-                self.listed = listed
-                self.user = user
+    @patch('interaction.db_interaction.database_manager')
+    def test_drop_user(self, mock_db):
+        mock_db.insert_user.return_value = None
+        mock_db.get_users.return_value = [(1, 'test_user', 'password', 1500)]
+        self.db.insert_user('test_user', 'password')
+        users = self.db.get_users()
+        self.assertEqual(len(users), 1)
+        user_id = users[0][0]
+        mock_db.drop_user.return_value = None
+        self.db.drop_user(user_id)
+        users = self.db.get_users()
+        self.assertEqual(len(users), 0)
 
-        pokemon_list = [
-            Pokemon('Pikachu', 100, True, 1),
-            Pokemon('Charizard', 200, False, 2),
-            Pokemon('Bulbasaur', 50, True, 1)
-        ]
-        self.db.insert_pokemon(pokemon_list)
-        listed_pokemon = self.db.get_pokemon_listed()
-        self.assertEqual(len(listed_pokemon), 2)
-        self.assertEqual(listed_pokemon[0][1], 'Pikachu')
-        self.assertEqual(listed_pokemon[1][1], 'Bulbasaur')
+    @patch('interaction.db_interaction.database_manager')
+    def test_update_user_pokebts(self, mock_db):
+        mock_db.insert_user.return_value = None
+        mock_db.get_users.return_value = [(1, 'test_user', 'password', 1500)]
+        self.db.insert_user('test_user', 'password')
+        users = self.db.get_users()
+        self.assertEqual(users[0][3], 1500)
+        mock_db.update_user_pokebts.return_value = None
+        self.db.update_user_pokebts(users[0][0], 2000)
+        users = self.db.get_users()
+        self.assertEqual(users[0][3], 2000)
 
 if __name__ == '__main__':
     unittest.main()

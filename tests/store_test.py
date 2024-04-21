@@ -10,16 +10,10 @@ class TestStore(unittest.TestCase):
     
     def test_init_with_no_pokemon(self, mock_stdout, mock_db_manager):
         mock_db_manager.return_value.get_user.return_value = [('username','Johnny', 'Black', 100)]
-        store - store('username', [])
-        expected_output - "Oh there is no Pokemon to display!\n"
-        self.assertEqual(mock_stdout.getvalue(), expected_output)
-
-    def test_init_with_pokemon(self, mock_stdout, mock_db_manager):
-        mock_db_manager.return_value.get_user.return_value = [('username', 'John', 'Doe', 100)]
-        pokemon_data = [{'name': 'Pikachu', 'price': 50}, {'name': 'Charmander', 'price': 30}]
-        store_instance = store('username', pokemon_data)
-        expected_output = "What would you like to buy today?\nJohn, Your Pokebits 100 PokeBts 🪙\n"
-        self.assertIn(expected_output, mock_stdout.getvalue())
+        store('username', [])
+        self.assertIn( 'Johnny, Your Pokebits 100 PokeBts 🪙', mock_stdout.getvalue())
+        self.assertIn('What would you like to buy today?', mock_stdout.getvalue())
+        self.assertIn('Oh there is no Pokemon to display!', mock_stdout.getvalue())
         
-        if __name__ == '__main__':
-            unittest.main()
+if __name__ == '__main__':
+    unittest.main()

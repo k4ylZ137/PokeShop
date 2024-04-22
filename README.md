@@ -131,8 +131,68 @@ Pokemon API:- https://pokeapi.co/
 
 ====Class Specification====
 
-more to come...
+Refactored Code: 
 
+```
+==inventory.py==
+
+class inventory(pokemon_list):
+
+    def __init__(self, current_user, listed_pokemon):
+
+        db = database_manager()
+        user = db.get_user(current_user)
+
+        text = ("What Pokemon would you like to take a look at?\n"
+        + str(user[0][1]) + ", Your Pokebits " + str(user[0][3]) + " PokeBts 🪙")
+
+        title = Text(text, justify="center")
+        print(Panel(title, style='bold', title='Inventory', padding=(1, 1)))
+        print()
+
+        if len(listed_pokemon) < 1:
+            print(Panel('Oh no you have no Pokemon!'))
+            return
+
+        super().display_pokemon(listed_pokemon, current_user)
+```
+==main_menu.py==
+'''
+class menu:
+    def __init__(self, current_user):
+        self.USER = current_user
+
+    def render_main_menu(self):
+        while True:
+            """
+            Render the main menu.
+            """
+            print()
+            title = 'Welcome to the Pokemon Market! 🏪'
+            text = '\tWould you like to look at the Store or your Inventory? (shop/inventory)'
+            print(Panel(text, title=title, padding=(1,1)))
+
+            # Define input dictionary
+            input_dict = {
+                'shop': ('Search the platform for listed pokemon to buy', self.shop_func),
+                'inventory': ('Look at your inventory and list pokemon', self.inventory_func)
+            }
+
+            inputs.handle_inputs(input_dict)
+
+    def shop_func(self):
+        db = database_manager()
+        listed_pokemon = db.get_pokemon_listed()
+
+        shop_page = store(self.USER, listed_pokemon)
+
+    def inventory_func(self):
+        db = database_manager()
+        listed_pokemon = db.get_pokemon(self.USER)
+
+        inv_page = inventory(self.USER, listed_pokemon)
+
+ '''
 ====Branching Strategy====
 
 When implementing code, create an issue and then branch into your workspace. 
@@ -141,4 +201,3 @@ Type the following into the command-line.
 - git checkout {name_of_issue}
 
 When merging code, commit and push, and then assign a code reviewer - when review complete, merge code. 
-

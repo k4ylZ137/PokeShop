@@ -129,7 +129,7 @@ class account_verification_base(ABC):
                 break
         return result
 
-    def choose_starter_pokemon(user):
+    def choose_starter_pokemon(self, user):
         print("\n")
         choice = inquirer.list_input(
             message="Choose your starter Pokemon from the following options: Bulbasaur, Charmander, Squirtle 🔥🌿💧:",

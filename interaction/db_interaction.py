@@ -91,3 +91,6 @@ class database_manager:
     def update_user_pokebts(self, id, poke_bits):
         self.cursor.execute("UPDATE users SET poke_bits = ? WHERE id = ?", (poke_bits, id))
         self.conn.commit()
+    def set_pokemon_price(self, pokemon_id, price):
+        self.cursor.execute("UPDATE pokemon SET price = ? WHERE id = ?", (price,pokemon_id))
+        self.conn.commit()

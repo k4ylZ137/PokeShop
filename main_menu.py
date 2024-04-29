@@ -4,6 +4,7 @@ from rich.panel import Panel
 
 from interaction.db_interaction import database_manager
 
+from search import search
 from store import store
 from inventory import inventory
 
@@ -18,13 +19,14 @@ class menu:
             """
             print()
             title = 'Welcome to the Pokemon Market! 🏪'
-            text = '\tWould you like to look at the Store or your Inventory? (shop/inventory)'
+            text = '\tWould you like to look at the Store, your Inventory or search the api to buy from? (shop/inventory/search)'
             print(Panel(text, title=title, padding=(1,1)))
 
             # Define input dictionary
             input_dict = {
                 'shop': ('Search the platform for listed pokemon to buy', self.shop_func),
-                'inventory': ('Look at your inventory and list pokemon', self.inventory_func)
+                'inventory': ('Look at your inventory and list pokemon', self.inventory_func),
+                'search': ('Search the pokemon API to buy a pokemon not listed in the shop', self.search_func)
             }
 
             inputs.handle_inputs(input_dict)
@@ -37,7 +39,13 @@ class menu:
 
     def inventory_func(self):
         db = database_manager()
-        listed_pokemon = db.get_pokemon(self.USER)
+        user = db.get_user_by_id(self.USER)
+        listed_pokemon = db.get_pokemon(user[0][1])
 
         inv_page = inventory(self.USER, listed_pokemon)
+
+    def search_func(self):
+        db = database_manager()
+        search_page = search()
+        search_page.run_page(self.USER)
 
